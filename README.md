@@ -44,7 +44,7 @@ venv\Scripts\activate
 ```
 
 #### macOS / Linux
-```
+```bash
 source venv/bin/activate
 ```
 ### 4. Vajalikud paketid
@@ -57,9 +57,9 @@ pip install beautifulsoup4
 Rakendus on käsurea (CLI) põhine.
 
 Käivita projekt projekti juurkaustast:
-
+```bash
 python -m src.app
-
+```
 
 #### **Programm küsib portaali nime:**
 
