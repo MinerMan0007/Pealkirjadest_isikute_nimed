@@ -32,11 +32,11 @@ parsimiseks BeautifulSoup4 teeki.
 git clone <repo_url>
 cd Pealkirjadest-isikute-nimed
 ```
-### 2. Virtuaalkeskkonna loomine
+### 2. Pythoni virtuaalkeskkonna loomine
 ```bash
 python -m venv venv
 ```
-### 3. Virtuaalkeskkonna aktiveerimine
+### 3. Pythoni virtuaalkeskkonna aktiveerimine
 
 #### Windows
 ```
