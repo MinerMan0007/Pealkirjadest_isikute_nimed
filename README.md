@@ -49,7 +49,8 @@ source venv/bin/activate
 ```
 ### 4. Vajalikud paketid
 ```bash
-pip install -r requirements.txt
+pip install requests
+pip install beautifulsoup4
 ```
 ## Käivitamine
 
