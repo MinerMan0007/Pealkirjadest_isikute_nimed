@@ -7,26 +7,37 @@ class NameExtractor:
     """
 
     NAME_PATTERN = re.compile(
-        r"\b([A-ZÕÄÖÜ][a-zõäöü]+(?:-[A-ZÕÄÖÜ][a-zõäöü]+)?"
-        r"(?:\s+[A-ZÕÄÖÜ][a-zõäöü]+|\s+[A-Z]\.){1,3})\b"
+        r"[A-ZÕÄÖÜ][a-zõäöü]+(?:\s+[A-ZÕÄÖÜ][a-zõäöü]+)+"
     )
 
     def extract(self, headlines: list[dict]) -> list[dict]:
         """
-        Tagastab nime, pealkirja ja URL-i.
+        Leiab pealkirjadest nimed ja eemaldab duplikaadid.
 
-        :param headlines: Pealkirjad koos URL-idega
-        :return: List objektidest (name, headline, url)
+        :param headlines: Pealkirjade ja URL-ide nimekiri
+        :return: Unikaalsed tulemused
         """
         results = []
+        seen = set()
 
         for item in headlines:
-            matches = self.NAME_PATTERN.findall(item["headline"])
-            for name in matches:
-                results.append({
-                    "name": name,
-                    "headline": item["headline"],
-                    "url": item["url"]
-                })
+            names = self.NAME_PATTERN.findall(item["headline"])
+
+            if not names:
+                continue
+
+            names_str = ", ".join(names)
+            key = (names_str, item["headline"], item["url"])
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+
+            results.append({
+                "names": names_str,
+                "headline": item["headline"],
+                "url": item["url"]
+            })
 
         return results

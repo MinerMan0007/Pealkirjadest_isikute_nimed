@@ -2,43 +2,37 @@ from downloader import PageDownloader
 from parser import HeadlineParser
 from name_extractor import NameExtractor
 from exporter import JsonExporter
+from utils import load_websites
 
 
 class NewsApp:
     """
-    Rakenduse põhilogika.
+    Rakenduse põhilogika, mis juhib andmete kogumist ja töötlemist.
     """
 
-    PORTALS = {
-        "delfi": "https://www.delfi.ee",
-        "postimees": "https://www.postimees.ee",
-        "ohtuleht": "https://www.ohtuleht.ee"
-    }
-
-    def run(self):
+    def run(self) -> None:
         """
-        Käivitab rakenduse.
+        Käivitab rakenduse ja töötleb kõik konfigureeritud veebilehed.
         """
-        print("Vali portaal: delfi, postimees, ohtuleht")
-        choice = input(">>> ").strip().lower()
+        print("Uudiste nimede koguja käivitub...\n")
 
-        if choice not in self.PORTALS:
-            print("Tundmatu portaal!")
-            return
+        websites = load_websites()
 
         downloader = PageDownloader()
         parser = HeadlineParser()
         extractor = NameExtractor()
         exporter = JsonExporter()
 
-        html = downloader.download(self.PORTALS[choice])
-        headlines = parser.extract_headlines(html, self.PORTALS[choice])
+        for url in websites:
+            print(f"Töötlen veebilehte: {url}")
 
-        names = extractor.extract(headlines)
-        exporter.export(choice, names)
+            html = downloader.download(url)
+            headlines = parser.extract_headlines(html, url)
+            results = extractor.extract(headlines)
 
-        print(f"Leitud {len(names)} nime. Tulemus salvestatud {choice}.json faili.")
+            exporter.export(url, results)
 
-
+            print(f"Leitud {len(results)} kirjet.\n")
 if __name__ == "__main__":
-    NewsApp().run()
+    app = NewsApp()
+    app.run()

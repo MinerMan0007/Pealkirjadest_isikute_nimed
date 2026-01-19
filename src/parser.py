@@ -17,15 +17,15 @@ class HeadlineParser:
         soup = BeautifulSoup(html, "html.parser")
         results = []
 
-        for a in soup.find_all("a", href=True):
-            headline = a.get_text(strip=True)
-            href = a["href"]
+        for link in soup.find_all("a", href=True):
+            headline = link.get_text(strip=True)
+            href = link["href"]
 
             if not headline or len(headline.split()) < 3:
                 continue
 
             if not href.startswith("http"):
-                href = base_url.rstrip("/") + href
+                href = base_url.rstrip("/") + "/" + href.lstrip("/")
 
             results.append({
                 "headline": headline,
