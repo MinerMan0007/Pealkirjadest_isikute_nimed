@@ -1,5 +1,6 @@
-import json
 from pathlib import Path
+import json
+from utils import get_domain_name
 
 
 class JsonExporter:
@@ -7,18 +8,19 @@ class JsonExporter:
     Salvestab tulemused JSON faili.
     """
 
-    def export(self, domain: str, data: list[dict]) -> None:
+    def export(self, url: str, data: list[dict]) -> None:
         """
-        Salvestab nimekirja JSON faili.
+        Salvestab andmed JSON faili.
 
-        :param domain: Domeeni nimi
-        :param data: Tulemused
+        :param url: Veebilehe aadress
+        :param data: Töödeldud tulemused
         """
         base_dir = Path(__file__).resolve().parent.parent
-        output_dir = base_dir / "output"
+        output_dir = base_dir / "json_files"
         output_dir.mkdir(exist_ok=True)
 
-        file_path = output_dir / f"{domain}.json"
+        filename = get_domain_name(url) + ".json"
+        file_path = output_dir / filename
 
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        with open(file_path, "w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=2)

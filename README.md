@@ -3,14 +3,15 @@
 ## Projekti kirjeldus
 
 See projekt on Pythonis kirjutatud rakendus, mis laeb Eesti uudisteportaalide  
-(**delfi.ee**, **postimees.ee**, **ohtuleht.ee**) avalehe ning otsib uudiste  
+(**delfi.ee**, **kroonika.delfi.ee**, **postimees.ee**, **ohtuleht.ee**) avalehe ning otsib uudiste  
 pealkirjadest inimeste nimesid.  
 
 Leitud nimed seotakse vastava pealkirja ja artikli URL-iga ning salvestatakse  
 JSON-faili domeenipõhiselt.
 
 Projekt kasutab objektorienteeritud programmeerimist (OOP) ning HTML-i  
-parsimiseks BeautifulSoup4 teeki.
+parsimiseks **BeautifulSoup4** teeki. Lehe URL-id loetakse eraldi **`config/websites.txt`** failist,  
+mis võimaldab uusi veebilehti kiiresti lisada ilma koodi muutmata.
 
 ---
 
@@ -37,12 +38,10 @@ cd Pealkirjadest-isikute-nimed
 python -m venv venv
 ```
 ### 3. Pythoni virtuaalkeskkonna aktiveerimine
-
 #### Windows
 ```
 venv\Scripts\activate
 ```
-
 #### macOS / Linux
 ```
 source venv/bin/activate
@@ -53,56 +52,48 @@ pip install -r requirements.txt
 ```
 ## Käivitamine
 
-Rakendus on käsurea (CLI) põhine.
+Rakendus on käsurea (CLI) põhine ja töötab kõikide portaalidega, mille URL-id on kirjas config/websites.txt failis.
+
+### 1. Veebilehtede lisamine
+
+Kuna veebilehtede aadressid on nüüd eraldi failis, saad neid väga lihtsalt lisada:
+
+Ava fail config/websites.txt
+
+Lisa iga veebileht uuele reale, näiteks:
+```
+https://www.delfi.ee
+https://kroonika.delfi.ee
+https://www.postimees.ee
+https://www.ohtuleht.ee
+```
+### 2. Rakenduse käivitamine
 
 Käivita projekt projekti juurkaustast:
-
+```bash
 python -m src.app
-
-
-#### **Programm küsib portaali nime:**
-
-Vali portaal: **delfi**, **postimees**, **ohtuleht**
-
-Väljund
-
-Tulemused salvestatakse kausta output/ domeenipõhiste JSON-failidena:
-
-delfi.json
-
-postimees.json
-
-ohtuleht.json
-
-JSON näidisväljund
-```json
-[
-  {
-    "name": "Mari Tamm",
-    "headline": "Mari Tamm kandideerib uuesti volikokku",
-    "url": "https://www.delfi.ee/artikkel/123456"
-  },
-  {
-    "name": "Karl Johannes Põld",
-    "headline": "Karl Johannes Põld lahkub ametist",
-    "url": "https://www.postimees.ee/789012"
-  }
-]
 ```
-### Projektistruktuur
+Kuna veebilehti saab hõlpsasti juurde lisada, töötab rakendus automaatselt kõigi veebilehtedega, mis on config/websites.txt failis.
+ja kui on soove et lida veebi lehti siis ava config/websites.txt faili ja lisa enda link.
+
+Väljund:
+
+Programm kogub iga portaali pealkirjad ja otsib neist inimeste nimesid. Leitud nimed seotakse vastava pealkirja ja artikli URL-iga ning salvestatakse domeenipõhisesse JSON faili, näiteks:
 ```
-Pealkirjadest-isikute-nimed/
-├── src/
-│   ├── app.py
-│   ├── downloader.py
-│   ├── parser.py
-│   ├── name_extractor.py
-│   ├── exporter.py
-│   └── __init__.py
-├── output/
-│   ├── delfi.json
-│   ├── postimees.json
-│   └── ohtuleht.json
-├── requirements.txt
-└── README.md
+json_files/
+├── delfi.json
+├── kroonika.json
+├── postimees.json
+└── ohtuleht.json
+```
+
+Tulemuste kohta prinditakse järgmine teave:
+```
+Uudiste nimede koguja käivitub...
+
+Töötlen veebilehte: https://www.delfi.ee
+Leitud 42 kirjet.
+
+Töötlen veebilehte: https://kroonika.delfi.ee
+Leitud 18 kirjet.
 ```
